@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 
 exports.createUser = async(req, res, next ) => {
     try {
-        const { name, email, phone, compnayName, role, address} = req.body;
+        const { name, email, phone, compnayName, role, address } = req.body;
 
         const userData = await User.findOne({
             where: {

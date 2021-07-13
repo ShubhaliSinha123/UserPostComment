@@ -7,7 +7,10 @@ const { createPost,
     findAndCountAllPostComment
 } = require('../controllers/common');
 
-router.post(
+const {verify} = require('../middleware/verify');
+
+router.use(verify)
+.post(
     '/create-post/:userId',
     createPost
 )

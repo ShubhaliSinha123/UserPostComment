@@ -4,6 +4,7 @@ const app = express();
 const db = require('./models');
 const userRoutes = require('./routes/user');
 const commonRoutes = require('./routes/common');
+const authenticationRoutes = require('./routes/authentication');
 
 const cors = require('cors');
 
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api/user', userRoutes);
 app.use('/api/common', commonRoutes);
+app.use('/api', authenticationRoutes);
 
 app.listen(port, () => {
     console.log(`Server is listening at port: ${port}`);

@@ -4,10 +4,15 @@ const {
      createUser, updateUser, deleteUser, findAndCountUserPostComment, findAndCountUser
     } = require('../controllers/user');
 
+const {verify} = require('../middleware/verify');
+
+
 router.post(
     '/create-user',
     createUser
-    )
+    );
+
+router.use(verify)
     .post(
         '/update-user/:id',
         updateUser
