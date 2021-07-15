@@ -10,7 +10,7 @@ module.exports = function(sequelize, Sequelize) {
             allowNull: false,
         },
         role: {
-            type: Sequelize.ENUM("designer", "developer", "admin", "hr", "coder"),
+            type: Sequelize.ENUM("designer", "developer", "admin", "hr", "coder", "tester"),
             defaultValue: "coder",
             allowNull: false
         },

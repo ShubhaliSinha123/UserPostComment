@@ -16,12 +16,12 @@ exports.verify = async(req, res, next) => {
                     };
                     return res.status(401).send({message: "Unauthorized Access"});
                 }
-                req.decoded = decoded;
-                console.log(decoded);
+                req.loggedInUser = decoded;
+                
                 next();
             });
         } else {
-            return res.status(403).send({message: "Forbidden Access"});
+            return res.status(403).send({message: "Forbidden.Access denied"});
         }
     } catch (error) {
         next(error);

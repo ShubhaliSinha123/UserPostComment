@@ -5,28 +5,32 @@ const {
     } = require('../controllers/user');
 
 const {verify} = require('../middleware/verify');
-
-
-router.post(
-    '/create-user',
-    createUser
-    );
+const { canAccess } = require('../middleware/access');
 
 router.use(verify)
     .post(
-        '/update-user/:id',
+    '/create-user',
+    canAccess('anyone'),
+    createUser
+    )
+    .post(
+        '/update-user',
+        canAccess('anyone'),
         updateUser
     )
     .delete(
-        '/delete-user/:id',
+        '/delete-user',
+        canAccess('admin'),
         deleteUser
     )
     .get(
-        "/find-and-count-user-post/:userId",
+        "/find-and-count-user-post",
+        canAccess('admin'),
         findAndCountUserPostComment
     )
     .get(
         '/find-and-count-user',
+        canAccess(['admin']),
         findAndCountUser
     );
     

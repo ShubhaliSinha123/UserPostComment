@@ -28,13 +28,14 @@ exports.createUser = async(req, res, next ) => {
             role
         });
 
+        if( role === 'admin' || role === 'tester') {
         await Employee.create({
             userId: user.id,
             compnayName, 
             post: role, 
             address
         });
-
+    }
         return res.status(201).send('User registered sucessfully!');
     } catch (error) {
         next(error);
@@ -46,7 +47,13 @@ exports.updateUser = async(req, res, next) => {
     try {
         const { name, email, phone, compnayName, role, address} = req.body;
 
-        const userData = await User.findOne({ where: {id: req.params.id}});
+        const userData = await User.findOne({ 
+            where: {
+                email: req.loggedInUser.email
+            } 
+        });
+
+       // const userData = await User.findOne({ where: {id: req.params.id}});
 
         if(!userData) {
             return res.status(401).send({message: "User, not found!"});
@@ -59,10 +66,18 @@ exports.updateUser = async(req, res, next) => {
         });
 
         if(!employee) {
-            return res.status(401).send({message: "Something went wrong...user is not a current employee of the company"});
+            if(role === 'tester' || role === 'admin' ) {
+            await Employee.create({
+                userId: userData.id,
+                compnayName,
+                post: role,
+                address,
+            });
+        }
+            return res.status(401).send({message: "User is now an employee of the company.."});
         }
 
-        const user = userData.update({
+        await userData.update({
             name,
             role,
             email,
@@ -87,7 +102,11 @@ exports.deleteUser = async(req, res, next) => {
     try {
         const id = req.params.id;
 
-        const userData= await User.findOne({id});
+        const userData = await User.findOne({ 
+            where: {
+                email: req.loggedInUser.email
+            } 
+        });
         
         if(!userData) {
             return res.status(401).send({message: "User not found"});
@@ -109,12 +128,16 @@ exports.findAndCountUserPostComment = async(req, res, next) => {
     try {
         const { offset, limit} = req.query;
 
-        const id = req.params.userId;
+        const userData = await User.findOne({ 
+            where: {
+                email: req.loggedInUser.email
+            } 
+        });
 
         const query = {
             attributes: ["name", "email", "phone"],
             where: {
-                id
+                id: userData.id
             },
             include: [{
                 model: Employee,
