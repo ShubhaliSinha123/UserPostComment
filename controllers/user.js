@@ -114,7 +114,7 @@ exports.deleteUser = async(req, res, next) => {
 
         const employee = await Employee.findOne({where: { userId: userData.id}});
 
-        const user = await userData.destroy();
+        await userData.destroy();
 
         await employee.destroy();
          
